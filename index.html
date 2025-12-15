@@ -23,7 +23,7 @@
 
   <h1>Linux CTF — Day 1</h1>
   <div class="topbar">
-    <div class="pill"><b>Format:</b> <span class="mono">FLAG{number}</span></div>
+    <div class="pill"><b>Format:</b> <span class="mono">FLAG{...}</span></div>
     <div class="pill" id="progressPill"><b>Progress:</b> 0/10</div>
     <button class="btn" id="resetBtn" type="button">Reset Progress</button>
   </div>
@@ -31,50 +31,49 @@
   <div id="missions"></div>
 
   <script>
-    // Change this if you publish multiple versions
-    const STORAGE_KEY = "linux_ctf_day1_v2";
+    const STORAGE_KEY = "linux_ctf_day1_flags_v1";
 
-    // Missions: no plaintext flags, only SHA-256 hashes of the correct FLAG{...} string.
+    // SHA-256 hashes of the correct flags (no plaintext flags on the page)
     const missions = [
-      { title: "1) Hidden Reality",
-        text: "How many hidden files exist? Multiply by 11.",
-        hash: "e74f54fa5194f77b6e8fdec3c857b637fc16c73f1cc391a0de0ebb2ab025a9f8" // FLAG{33}
+      { title: "1) Dot Digger",
+        text: "Find the hidden flag file. Submit the flag.",
+        hash: "01779c701cd26fc7e4491720764fe279ae798d8767e1aa6bd3221516e2ab1fa5"
       },
-      { title: "2) Deep Inside",
-        text: "Count the directories in the path maze/a/b/c/d/e (include 'maze'). Multiply by 7.",
-        hash: "29a7aa45fa44495b462683c3940d26c7e284d7408f3223b5b53c2ee9cfa64099" // FLAG{42}
+      { title: "2) Maze Runner",
+        text: "Navigate the maze and locate the flag at the end.",
+        hash: "d779818717443a957f3a030e32101b347d1caab272ffe51c1b42a870d318f35b"
       },
-      { title: "3) Word Hunter",
-        text: "How many files contain the word linux? Multiply by 19.",
-        hash: "db49b982837505f62e5b27d18d6b3ee09b92bb7527fb8fd9a7eab82996d3ac49" // FLAG{38}
+      { title: "3) Grep Goblin",
+        text: "Use grep to locate the flag hidden inside text files.",
+        hash: "a2899d68d265e34b6b2b183280563b2306cd65db48fd68089bbe78bee40e05ee"
       },
-      { title: "4) Size Matters",
-        text: "Find the largest file size (bytes). Subtract 200.",
-        hash: "d2433e3783bada060f9cd84f808516049f028ff14a67c37198510102bd4a7cd4" // FLAG{1000}
+      { title: "4) Finders Keeps",
+        text: "Use find to locate the specific key file with the flag inside.",
+        hash: "8ea823f563b547c56487f462ed4492ba00a268d632c261b02735d7e4fcd53136"
       },
-      { title: "5) Permission Puzzle",
-        text: "How many files are NOT readable? Multiply by 17.",
-        hash: "14209823df736b3d741fc29d4757698600c55cfa04b2fcfce899e1b1d8d7cf3b" // FLAG{17}
+      { title: "5) Dash Slashed",
+        text: "A file name starts with a dash. Read it and submit the flag.",
+        hash: "c3eb06d9d1fe7b7da960c7b180113f6d4a336a266069cd9c6aeedf4fa89f5078"
       },
-      { title: "6) Dash Trap",
-        text: "Count bytes in the file named --data.txt. Multiply by 13.",
-        hash: "b70268b92acfdee3133bc63c19f8154528846ed9f83bc086ee29162f6bb5dce2" // FLAG{104}
+      { title: "6) Chmod Champion",
+        text: "A flag is locked by permissions. Fix access and submit the flag.",
+        hash: "3b18d346a960f95cb9ab6f2e6c4217637c2516f41e46d9ed68def4380efc62ba"
       },
-      { title: "7) Inventory Check",
-        text: "Number of files in words/ plus number of files in words/ that contain linux. Multiply by 9.",
-        hash: "e81ab833acff6b455dfad96532444a4bd2b25ff71e4273463645f38dd5e344b9" // FLAG{108}
+      { title: "7) Base64 Bandit",
+        text: "A flag is base64-encoded. Decode it and submit the flag.",
+        hash: "22b6e7bb243562d6a540e6858c408c801f2eaa13ee8c1c0213cb82974c70f8c2"
       },
-      { title: "8) Line Numbers",
-        text: "How many lines are in logs/log.txt? Subtract 20.",
-        hash: "426958651517cff37fa922825369e61542d1001e5843c9910f03e2e5ee1eeb02" // FLAG{67}
+      { title: "8) Tail Trail",
+        text: "A big log hides the flag near the end. Retrieve it and submit the flag.",
+        hash: "209a2787c9fdf663ce67d3526b76bb7e3425dd6727a3f3f05ec24c531fe2a896"
       },
-      { title: "9) Environment Spy",
-        text: "Length of the SECRET_VAR value. Multiply by 5.",
-        hash: "a139cecee766dcf54439d0682d61e527b8d1da9b08631026db492dd579786ea1" // FLAG{65}
+      { title: "9) Size Sleuth",
+        text: "Use size-based searching to locate the flag file and submit the flag.",
+        hash: "873488c5784c9ef758c39274068f4908f349f93d929fac706422f603ba6b28ee"
       },
-      { title: "10) Final Calculation",
-        text: "Add the results from missions 1, 4, and 8.",
-        hash: "1eb89b556b6424610d59cc0a7343108e0464bb207e29c752e294b9910828c9eb" // FLAG{1100}
+      { title: "10) Vault Victory",
+        text: "Search the vault to locate the final flag and submit it.",
+        hash: "9c0ed3f22c8f8a3a2307aae92e8632d0907b9bdc5c63ec2e90b41d47db6c9871"
       }
     ];
 
@@ -115,7 +114,7 @@
           <p>${m.text}</p>
           ${
             unlocked ? `
-              <input id="in_${i}" class="mono" placeholder="FLAG{number}" ${done ? "disabled" : ""} />
+              <input id="in_${i}" class="mono" placeholder="FLAG{...}" ${done ? "disabled" : ""} />
               <div class="row">
                 <button class="btn" type="button" ${done ? "disabled" : ""} onclick="check(${i})">Submit</button>
                 <div id="msg_${i}"></div>
@@ -134,8 +133,8 @@
       const msgEl = document.getElementById("msg_" + i);
       const val = (inputEl.value || "").trim();
 
-      // Basic format guard (still not a hint—just prevents junk)
-      if(!/^FLAG\{\d+\}$/.test(val)){
+      // Loose format guard: FLAG{letters_numbers_underscores_dashes}
+      if(!/^FLAG\{[A-Za-z0-9_-]+\}$/.test(val)){
         msgEl.innerHTML = `<span class="no">Invalid format</span>`;
         return;
       }
